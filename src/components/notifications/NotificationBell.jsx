@@ -51,15 +51,15 @@ const NotificationBell = () => {
 
     switch (type) {
       case 'GROUP_JOIN':
-        return \`You've joined "\${data.groupName}" on \${new Date(
+        return `You've joined "${data.groupName}" on ${new Date(
           data.date
-        ).toLocaleDateString()} at \${data.timeSlot}\`;
+        ).toLocaleDateString()} at ${data.timeSlot}`;
 
       case 'GROUP_UPDATE':
-        return \`"\${data.groupName}" has been updated\`;
+        return `"${data.groupName}" has been updated`;
 
       case 'GROUP_CANCEL':
-        return \`"\${data.groupName}" has been cancelled\`;
+        return `"${data.groupName}" has been cancelled`;
 
       default:
         return 'New notification';
