@@ -75,11 +75,11 @@ export const getAvailableGroups = async () => {
     // Get groups not joined by current user
     const { data, error } = await supabase
       .from('groups')
-      .select(\`
+      .select(`
         *,
         created_by:users!groups_created_by_fkey(full_name),
         members:group_members(user_id)
-      \`)
+      `)
       .not('members.user_id', 'eq', user.id)
       .order('created_at', { ascending: false });
 
@@ -103,11 +103,11 @@ export const getJoinedGroups = async () => {
 
     const { data, error } = await supabase
       .from('groups')
-      .select(\`
+      .select(`
         *,
         created_by:users!groups_created_by_fkey(full_name),
         members:group_members(user_id)
-      \`)
+      `)
       .eq('members.user_id', user.id)
       .order('created_at', { ascending: false });
 
@@ -131,11 +131,11 @@ export const getCreatedGroups = async () => {
 
     const { data, error } = await supabase
       .from('groups')
-      .select(\`
+      .select(`
         *,
         created_by:users!groups_created_by_fkey(full_name),
         members:group_members(user_id, users(full_name))
-      \`)
+      `)
       .eq('created_by', user.id)
       .order('created_at', { ascending: false });
 
@@ -197,10 +197,10 @@ export const getGroupMembers = async (groupId) => {
   try {
     const { data, error } = await supabase
       .from('group_members')
-      .select(\`
+      .select(`
         *,
         user:users(full_name)
-      \`)
+      `)
       .eq('group_id', groupId)
       .order('joined_at', { ascending: true });
 
@@ -216,14 +216,14 @@ export const getGroupMembers = async (groupId) => {
 // Subscribe to group updates
 export const subscribeToGroup = (groupId, callback) => {
   return supabase
-    .channel(\`group:\${groupId}\`)
+    .channel(`group:${groupId}`)
     .on(
       'postgres_changes',
       {
         event: '*',
         schema: 'public',
         table: 'groups',
-        filter: \`id=eq.\${groupId}\`,
+        filter: `id=eq.${groupId}`,
       },
       (payload) => callback(payload)
     )
@@ -233,14 +233,14 @@ export const subscribeToGroup = (groupId, callback) => {
 // Subscribe to group members updates
 export const subscribeToGroupMembers = (groupId, callback) => {
   return supabase
-    .channel(\`group_members:\${groupId}\`)
+    .channel(`group_members:${groupId}`)
     .on(
       'postgres_changes',
       {
         event: '*',
         schema: 'public',
         table: 'group_members',
-        filter: \`group_id=eq.\${groupId}\`,
+        filter: `group_id=eq.${groupId}`,
       },
       (payload) => callback(payload)
     )
