@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You've Joined a Group!</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4;">
+  <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%); padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
+      <h1 style="color: white; margin: 0; font-size: 24px;">You've Joined {{groupName}}!</h1>
+    </div>
+    
+    <div style="background: white; padding: 40px 20px; border-radius: 0 0 10px 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+      <p style="margin-bottom: 20px;">Great! You're now a member of {{groupName}}.</p>
+      
+      <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; margin: 30px 0;">
+        <h3 style="margin: 0 0 15px 0; color: #1F2937;">Group Details:</h3>
+        
+        <div style="margin-bottom: 10px;">
+          <strong style="color: #4B5563;">Type:</strong>
+          <span>{{groupType}}</span>
+        </div>
+        
+        <div style="margin-bottom: 10px;">
+          <strong style="color: #4B5563;">Date:</strong>
+          <span>{{date}}</span>
+        </div>
+        
+        <div style="margin-bottom: 10px;">
+          <strong style="color: #4B5563;">Time:</strong>
+          <span>{{time}}</span>
+        </div>
+        
+        <div style="margin-bottom: 10px;">
+          <strong style="color: #4B5563;">Location:</strong>
+          <span>{{location}}</span>
+        </div>
+        
+        <div style="margin-bottom: 10px;">
+          <strong style="color: #4B5563;">Contact:</strong>
+          <span>{{contactMethod}}: {{contactInfo}}</span>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="{{locationLink}}" style="display: inline-block; background-color: #3B82F6; color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold;">View Location</a>
+      </div>
+      
+      <p style="margin-bottom: 20px;">You can view all your groups in the My Groups section of Joynex.</p>
+      
+      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+      
+      <p style="color: #6B7280; font-size: 14px; margin: 0;">This is an automated message about a group you joined on Joynex.</p>
+    </div>
+    
+    <div style="text-align: center; padding: 20px; color: #6B7280; font-size: 14px;">
+      <p style="margin: 0;">© {{year}} Joynex. All rights reserved.</p>
+      <p style="margin: 5px 0 0 0;">For University of Melbourne students</p>
+    </div>
+  </div>
+</body>
+</html>
