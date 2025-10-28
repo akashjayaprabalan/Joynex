@@ -41,17 +41,24 @@ export const AuthProvider = ({ children }) => {
       }
 
       // Create user account directly with Supabase Auth
+      // emailRedirectTo: null prevents confirmation email
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
             full_name: fullName
-          }
+          },
+          emailRedirectTo: undefined
         }
       });
 
       if (signUpError) throw signUpError;
+
+      // If email confirmation is required by Supabase, show a better message
+      if (data?.user && !data.session) {
+        throw new Error('Please check your email to confirm your account, then sign in.');
+      }
 
       // Create user profile
       const { error: profileError } = await supabase
