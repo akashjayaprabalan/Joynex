@@ -1,9 +1,9 @@
 // Initialize Google Analytics
 export const initGA = () => {
-  if (typeof window !== 'undefined' && import.meta.env.PROD) {
+  if (typeof window !== 'undefined' && import.meta.env.PROD && import.meta.env.VITE_GA_MEASUREMENT_ID) {
     const script = document.createElement('script');
     script.async = true;
-    script.src = \`https://www.googletagmanager.com/gtag/js?id=\${import.meta.env.VITE_GA_MEASUREMENT_ID}\`;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${import.meta.env.VITE_GA_MEASUREMENT_ID}`;
     document.head.appendChild(script);
 
     window.dataLayer = window.dataLayer || [];
@@ -61,7 +61,7 @@ export const trackEngagement = {
 
   // Track filter usage
   filterUsed: (filterType, value) => {
-    trackEvent('Filter', 'Applied', \`\${filterType}:\${value}\`);
+    trackEvent('Filter', 'Applied', `${filterType}:${value}`);
   },
 
   // Track verification attempts
