@@ -33,45 +33,41 @@ export const AuthProvider = ({ children }) => {
     return email.endsWith('@unimelb.edu.au') || email.endsWith('@student.unimelb.edu.au');
   };
 
-  // Sign up with email
+  // Sign up with email (simplified - no email verification for now)
   const signUp = async (email, password, fullName) => {
     try {
       if (!validateEmailDomain(email)) {
         throw new Error('Please use your University of Melbourne email address.');
       }
 
-      // First, check if email is blocked
-      const { data: blockedData, error: blockedError } = await supabase
-        .rpc('is_email_blocked', { email_address: email });
-
-      if (blockedError) throw blockedError;
-      if (blockedData) {
-        throw new Error('This email is temporarily blocked. Please try again later.');
-      }
-
-      // Create verification code
-      const code = Math.floor(100000 + Math.random() * 900000).toString();
-      const { error: codeError } = await supabase
-        .from('verification_codes')
-        .insert([
-          { email, code, expires_at: new Date(Date.now() + 15 * 60000) }
-        ]);
-
-      if (codeError) throw codeError;
-
-      // Store signup data in localStorage temporarily
-      localStorage.setItem('pendingSignup', JSON.stringify({
+      // Create user account directly with Supabase Auth
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        fullName,
-        code
-      }));
+        options: {
+          data: {
+            full_name: fullName
+          }
+        }
+      });
 
-      // TODO: Send verification email with code
-      console.log('Verification code:', code);
+      if (signUpError) throw signUpError;
 
-      setVerificationSent(true);
-      return { error: null };
+      // Create user profile
+      const { error: profileError } = await supabase
+        .from('users')
+        .insert([
+          {
+            id: data.user.id,
+            email: email,
+            full_name: fullName,
+            verification_status: true
+          }
+        ]);
+
+      if (profileError) throw profileError;
+
+      return { data, error: null };
     } catch (error) {
       console.error('Error in signUp:', error);
       return { error };

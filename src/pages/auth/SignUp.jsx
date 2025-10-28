@@ -1,27 +1,17 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container, Card, Input, Button } from '@components/ui';
 import { useAuth } from '@context/AuthContext';
 
 const SignUp = () => {
-  const { signUp, verifyCode, verificationSent } = useAuth();
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [resendTimer, setResendTimer] = useState(0);
-
-  useEffect(() => {
-    let timer;
-    if (resendTimer > 0) {
-      timer = setInterval(() => {
-        setResendTimer((prev) => prev - 1);
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [resendTimer]);
+  const [success, setSuccess] = useState(false);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -31,7 +21,12 @@ const SignUp = () => {
     try {
       const { error } = await signUp(email, password, fullName);
       if (error) throw error;
-      setResendTimer(120); // 2 minutes
+      
+      setSuccess(true);
+      // Redirect to discover page after successful signup
+      setTimeout(() => {
+        navigate('/discover');
+      }, 1500);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -39,86 +34,17 @@ const SignUp = () => {
     }
   };
 
-  const handleVerify = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    try {
-      const { error } = await verifyCode(verificationCode);
-      if (error) throw error;
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResendCode = async () => {
-    setError('');
-    setLoading(true);
-
-    try {
-      const { error } = await signUp(email, password, fullName);
-      if (error) throw error;
-      setResendTimer(120); // 2 minutes
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (verificationSent) {
+  if (success) {
     return (
       <Container className="min-h-screen flex items-center justify-center">
         <Card className="w-full max-w-md p-8">
-          <h1 className="text-2xl font-bold text-center mb-6">
-            Verify Your Email
-          </h1>
-          <p className="text-gray-600 text-center mb-6">
-            A 6-digit code has been sent to your email. Please enter it below to complete your registration.
-          </p>
-          {error && (
-            <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4">
-              {error}
-            </div>
-          )}
-          <form onSubmit={handleVerify} className="space-y-4">
-            <Input
-              label="Verification Code"
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
-              placeholder="Enter 6-digit code"
-              disabled={loading}
-              required
-            />
-            <Button
-              type="submit"
-              className="w-full"
-              loading={loading}
-              disabled={loading}
-            >
-              Verify Email
-            </Button>
-            <div className="text-center">
-              {resendTimer > 0 ? (
-                <p className="text-gray-600">
-                  Resend code in {Math.floor(resendTimer / 60)}:
-                  {(resendTimer % 60).toString().padStart(2, '0')}
-                </p>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleResendCode}
-                  className="text-blue-600 hover:text-blue-800"
-                  disabled={loading}
-                >
-                  Resend Code
-                </button>
-              )}
-            </div>
-          </form>
+          <div className="text-center">
+            <div className="text-6xl mb-4">🎉</div>
+            <h1 className="text-2xl font-bold mb-4">Welcome to Joynex!</h1>
+            <p className="text-gray-600">
+              Your account has been created successfully. Redirecting you to discover groups...
+            </p>
+          </div>
         </Card>
       </Container>
     );
